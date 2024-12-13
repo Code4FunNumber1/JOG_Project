@@ -40,7 +40,7 @@ def create_text_and_rect(text, color, background_color, **locations):
 
 
 (title_text, title_rect) = create_text_and_rect("~~Snake~~", GREEN, DARKRED,
-                                             center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2))
+                                                center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2))
 
 (score_text, score_rect) = create_text_and_rect("Score: " + str(score), GREEN, DARKRED,
                                                 topleft=(10, 10))
@@ -58,7 +58,6 @@ apple_rect = pygame.draw.rect(display_surface, RED, apple_pos)
 head_pos = (head_x, head_y, SNAKE_SIZE, SNAKE_SIZE)
 head_rect = pygame.draw.rect(display_surface, GREEN, head_pos)
 body_pos = []
-
 
 # The main game loop
 running = True
@@ -95,6 +94,7 @@ def check_events():
         check_quit(event)
         move_snake(event)
 
+
 def handle_snake():
     global body_pos
     global head_x
@@ -107,6 +107,7 @@ def handle_snake():
     snake_dy += head_y
     head_pos = (head_x, head_y, SNAKE_SIZE, SNAKE_SIZE)
 
+
 def reset_game_after_game_over(event):
     global is_paused, score, head_x, head_y, head_pos, body_pos, snake_dx, snake_dy
     if event.type == pygame.KEYDOWN:
@@ -118,6 +119,7 @@ def reset_game_after_game_over(event):
         snake_dx = 0
         snake_dy = 0
         is_paused = False
+
 
 def check_end_game_after_game_over(event):
     global is_paused
@@ -133,7 +135,7 @@ def check_game_over():
     global body_pos
     global running
     global is_paused
-    if head_rect.left < 0  or head_rect.right > WINDOW_WIDTH or head_rect.top < 0 or head_rect.bottom > WINDOW_HEIGHT or head_pos in body_pos:
+    if head_rect.left < 0 or head_rect.right > WINDOW_WIDTH or head_rect.top < 0 or head_rect.bottom > WINDOW_HEIGHT or head_pos in body_pos:
         display_surface.blit(game_over_text, game_over_rect)
         display_surface.blit(continue_text, continue_rect)
         pygame.display.update()
@@ -143,61 +145,52 @@ def check_game_over():
                 reset_game_after_game_over(event)
                 check_end_game_after_game_over(event)
 
+
 def check_collisions():
     global score, apple_x, apple_y, apple_pos, body_pos
-    # TODO: if head_rect.colliderect(apple_rect)
-        # TODO: add 1 to the score
-        # TODO: call pick_up_sound.play()
-        # TODO: set apple_x to random.randint(0, WINDOW_WIDTH - SNAKE_SIZE)
-        # TODO: set apple_y to random.randint(0, WINDOW_HEIGHT - SNAKE_SIZE)
-        # TODO: set apple_coord to (apple_x, apple_y, SNAKE_SIZE, SNAKE_SIZE)
-        # TODO: call body_coords.append(head_coord)
-        pass # TODO: remove this pass when done.
+    if head_rect.colliderect(apple_rect):
+        score += 1
+        pick_up_sound.play()
+        apple_x = random.randint(0, WINDOW_WIDTH - SNAKE_SIZE)
+        apple_y = random.randint(0, WINDOW_HEIGHT - SNAKE_SIZE)
+        apple_pos = (apple_x, apple_y, SNAKE_SIZE, SNAKE_SIZE)
+        body_pos.append(head_pos)
+
 
 def blit_hud():
-    # TODO: call display_surface.blit(title_text, title_rect)
-    # TODO: call display_surface.blit(score_text, score_rect)
-    pass  # TODO: remove this pass when done.
+    display_surface.blit(title_text, title_rect)
+    display_surface.blit(score_text, score_rect)
+
 
 def blit_assets():
-    # TODO: for body in body_coords:
-        # TODO: call pygame.draw.rect(display_surface, DARKGREEN, body)
-    # TODO: set head_rect to pygame.draw.rect(display_surface, GREEN, head_coord)
-    # TODO: set apple_rect to pygame.draw.rect(display_surface, RED, apple_coord)
-    pass  # TODO: remove this pass when done.
+    for body in body_pos:
+        pygame.draw.rect(display_surface, DARKGREEN, body)
+        head_rect = pygame.draw.rect(display_surface, GREEN, head_pos)
+        apple_rect = pygame.draw.rect(display_surface, RED, apple_pos)
+
 
 def update_display_and_tick_clock():
-    # TODO: call pygame.display.update()
-    # TODO: call clock.tick(FPS)
-    pass  # TODO: remove this pass when done.
+    pygame.display.update()
+    clock.tick(FPS)
+
 
 while running:
-    # Check pygame events
     check_events()
 
-    # handle growing and manipulating the snake
     handle_snake()
 
-    # Check for game over
     check_game_over()
 
-    # Check for collisions
     check_collisions()
 
-    # Update HUD
-    # TODO: set score_text to font.render("Score: " + str(score), True, GREEN, DARKRED)
+    score_text = font.render("Score: " + str(score), True, GREEN, DARKRED)
 
-    # Fill the surface
-    # TODO: call display_surface.fill(WHITE)
+    display_surface.fill(WHITE)
 
-    # Blit HUD
     blit_hud()
 
-    # Blit assets
     blit_assets()
 
-    # Update display and tick clock
     update_display_and_tick_clock()
 
-# End the game
 pygame.quit()
