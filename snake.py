@@ -68,23 +68,23 @@ def move_snake(event):
     global snake_dx, snake_dy
     if event.type == pygame.KEYDOWN:
         key = event.key
-        if key == pygame.K_LEFT or pygame.K_a:
-            snake_dx = -1 * SNAKE_SIZE
+        if key == pygame.K_LEFT:
+            snake_dx = -0.75 * SNAKE_SIZE
             snake_dy = 0
-        if key == pygame.K_RIGHT or pygame.K_d:
-            snake_dx = SNAKE_SIZE
+        if key == pygame.K_RIGHT:
+            snake_dx = SNAKE_SIZE * 0.75
             snake_dy = 0
-        if key == pygame.K_UP or pygame.K_w:
+        if key == pygame.K_UP:
             snake_dx = 0
-            snake_dy = -1 * SNAKE_SIZE
-        if key == pygame.K_DOWN or pygame.K_s:
+            snake_dy = -0.75 * SNAKE_SIZE
+        if key == pygame.K_DOWN:
             snake_dx = 0
-            snake_dy = SNAKE_SIZE
+            snake_dy = SNAKE_SIZE * 0.75
 
 
 def check_quit(event):
     global running
-    if event == pygame.QUIT:
+    if event.type == pygame.QUIT:
         running = False
 
 
@@ -104,7 +104,7 @@ def handle_snake():
     body_pos.insert(0, head_pos)
     body_pos.pop()
     head_x += snake_dx
-    snake_dy += head_y
+    head_y += snake_dy
     head_pos = (head_x, head_y, SNAKE_SIZE, SNAKE_SIZE)
 
 
@@ -163,10 +163,11 @@ def blit_hud():
 
 
 def blit_assets():
+    global head_rect, apple_rect
     for body in body_pos:
         pygame.draw.rect(display_surface, DARKGREEN, body)
-        head_rect = pygame.draw.rect(display_surface, GREEN, head_pos)
-        apple_rect = pygame.draw.rect(display_surface, RED, apple_pos)
+    head_rect = pygame.draw.rect(display_surface, GREEN, head_pos)
+    apple_rect = pygame.draw.rect(display_surface, RED, apple_pos)
 
 
 def update_display_and_tick_clock():
